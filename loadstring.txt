@@ -1,0 +1,1 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/YoGalaxyStar13/GXForRoblox/main/NewMainScript.lua", true))()
