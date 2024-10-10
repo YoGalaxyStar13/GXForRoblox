@@ -10053,11 +10053,11 @@ run(function()
 				until not invis.Enabled
 
 				if hrp then
-					hrp.CanCollide = true
+					hrp.CanCollide = false
 				end
 
 				for _, part in pairs(invisbaseparts) do
-					part.CanCollide = true
+					part.CanCollide = false
 				end
 				invisbaseparts = {}
 			end
@@ -10073,11 +10073,11 @@ run(function()
 
 				local hrp = lplr.Character:FindFirstChild("HumanoidRootPart")
 				if hrp then
-					hrp.CanCollide = true
+					hrp.CanCollide = false
 				end
 
 				for _, part in pairs(invisbaseparts) do
-					part.CanCollide = true
+					part.CanCollide = false
 				end
 				invisbaseparts = {}
 			end
