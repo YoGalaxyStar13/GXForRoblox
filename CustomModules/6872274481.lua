@@ -10016,81 +10016,14 @@ end)
 
 run(function()
 	local invis = {};
-	local invisbaseparts = {};
 	local invisanim = Instance.new('Animation');
-	local invisrenderstep;
 	local invistask;
 	local invishumanim;
+	local PhaseDelay = 1
 
 	invis = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
 		Name = 'InvisibilityBetter',
-		HoverText = 'Plays an animation which makes it harder\nfor targets to see you.',
-		Function = function(calling)
-			local invisFunction = function()
-				if invistask then task.cancel(invistask) end
-				if invisrenderstep then invisrenderstep:Disconnect() end
-
-				repeat task.wait() until lplr and lplr.Character and lplr.Character:FindFirstChild("Humanoid")
-
-				for _, v in pairs(lplr.Character:GetDescendants()) do 
-					if v:IsA('BasePart') and v ~= lplr.Character:FindFirstChild('HumanoidRootPart') then
-						v.CanCollide = false
-						v.LocalTransparencyModifier = 1 -- Ensures no grey overlay
-						table.insert(invisbaseparts, v)
-					end
-				end
-
-				table.insert(invis.Connections, lplr.Character.DescendantAdded:Connect(function(v)
-					if v:IsA('BasePart') and v ~= lplr.Character:FindFirstChild('HumanoidRootPart') then 
-						v.CanCollide = false
-						v.LocalTransparencyModifier = 1 -- Ensures no grey overlay
-						table.insert(invisbaseparts, v)
-					end
-				end))
-
-				invisanim.AnimationId = 'rbxassetid://11335949902';
-				local anim = lplr.Character.Humanoid:LoadAnimation(invisanim);
-				invishumanim = anim;
-
-				repeat 
-					task.wait()
-					anim:Play(0.1, 9e9, 0.1)
-				until not invis.Enabled
-
-				for _, v in pairs(invisbaseparts) do
-					v.CanCollide = true
-					v.LocalTransparencyModifier = 0 -- Resets transparency properly
-				end
-			end
-
-			if calling then
-				invistask = task.spawn(invisFunction);
-				table.insert(invis.Connections, lplr.CharacterAdded:Connect(invisFunction))
-			else
-				if invishumanim then
-					invishumanim:Stop();
-				end
-				if invistask then task.cancel(invistask) end
-
-				for _, v in pairs(invisbaseparts) do
-					v.CanCollide = true
-					v.LocalTransparencyModifier = 0 -- Resets transparency properly
-				end
-				invisbaseparts = {}
-			end
-		end
-	})
-end)
-
-run(function()
-	local invis = {};
-	local invisanim = Instance.new('Animation');
-	local invistask;
-	local invishumanim;
-
-	invis = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-		Name = 'InvisibilityV2',
-		HoverText = 'Plays an animation which makes it harder\nfor targets to see you.',
+		HoverText = 'Plays an animation which makes it harder\nfor targets to see you and lets you phase through blocks.',
 		Function = function(calling)
 			local invisFunction = function()
 				if invistask then task.cancel(invistask) end
@@ -10099,8 +10032,9 @@ run(function()
 
 				local hrp = lplr.Character:FindFirstChild("HumanoidRootPart")
 
+				-- Disable collision for all parts except HumanoidRootPart
 				for _, part in pairs(lplr.Character:GetDescendants()) do
-					if part:IsA("BasePart") then
+					if part:IsA("BasePart") and part ~= hrp then
 						part.CanCollide = false
 					end
 				end
@@ -10109,13 +10043,34 @@ run(function()
 				local anim = lplr.Character.Humanoid:LoadAnimation(invisanim);
 				invishumanim = anim;
 
+				RunLoops:BindToHeartbeat("Phase", function()
+					if entityLibrary.isAlive and entityLibrary.character.Humanoid.MoveDirection ~= Vector3.zero and (not GuiLibrary.ObjectsThatCanBeSaved.SpiderOptionsButton.Api.Enabled or holdingshift) then
+						if PhaseDelay <= tick() then
+							local raycastparameters = RaycastParams.new()
+							raycastparameters.FilterDescendantsInstances = {store.blocks, collectionService:GetTagged("spawn-cage"), workspace.SpectatorPlatform}
+							local PhaseRayCheck = workspace:Raycast(entityLibrary.character.Head.CFrame.p, entityLibrary.character.Humanoid.MoveDirection * 1.15, raycastparameters)
+							if PhaseRayCheck then
+								local PhaseDirection = (PhaseRayCheck.Normal.Z ~= 0 or not PhaseRayCheck.Instance:GetAttribute("GreedyBlock")) and "Z" or "X"
+								if PhaseRayCheck.Instance.Size[PhaseDirection] <= PhaseStudLimit.Value * 3 and PhaseRayCheck.Instance.CanCollide and PhaseRayCheck.Normal.Y == 0 then
+									local PhaseDestination = entityLibrary.character.HumanoidRootPart.CFrame + (PhaseRayCheck.Normal * (-(PhaseRayCheck.Instance.Size[PhaseDirection]) - (entityLibrary.character.HumanoidRootPart.Size.X / 1.5)))
+									if isPointInMapOccupied(PhaseDestination.p) then
+										PhaseDelay = tick() + 1
+										entityLibrary.character.HumanoidRootPart.CFrame = PhaseDestination
+									end
+								end
+							end
+						end
+					end
+				end)
+
 				repeat 
 					task.wait()
 					anim:Play(0.1, 9e9, 0.1)
 				until not invis.Enabled
 
+				RunLoops:UnbindFromHeartbeat("Phase")
 				for _, part in pairs(lplr.Character:GetDescendants()) do
-					if part:IsA("BasePart") then
+					if part:IsA("BasePart") and part ~= hrp then
 						part.CanCollide = true
 					end
 				end
@@ -10131,7 +10086,7 @@ run(function()
 				if invistask then task.cancel(invistask) end
 
 				for _, part in pairs(lplr.Character:GetDescendants()) do
-					if part:IsA("BasePart") then
+					if part:IsA("BasePart") and part ~= hrp then
 						part.CanCollide = true
 					end
 				end
