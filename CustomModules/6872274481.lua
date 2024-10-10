@@ -10074,7 +10074,7 @@ run(function()
     local AntiHit = {Enabled = false}
 
     AntiHit = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-        Name = "AntiHit",
+        Name = "AntiHitV2",
         Function = function(state)
             AntiHit.Enabled = state
             if state then
