@@ -2496,7 +2496,7 @@ run(function()
 		end,
 		HoverText = "Makes you go zoom (longer Fly discovered by exelys and Cqded)",
 		ExtraText = function()
-			return "Heatseeker"
+			return "CFrame"
 		end
 	})
 	FlySpeed = Fly.CreateSlider({
@@ -2921,7 +2921,7 @@ run(function()
 		end,
 		HoverText = "Makes you go zoom",
 		ExtraText = function()
-			return "Heatseeker"
+			return "CFrame"
 		end
 	})
 	InfiniteFlySpeed = InfiniteFly.CreateSlider({
@@ -4420,7 +4420,7 @@ run(function()
 		end,
 		HoverText = "Increases your movement.",
 		ExtraText = function()
-			return "Heatseeker"
+			return "CFrame"
 		end
 	})
 	SpeedValue = Speed.CreateSlider({
@@ -9432,7 +9432,6 @@ run(function()
     local TweenSpeed = 0.7
     local HeightOffset = 5
     local PlayerTP = {}
-    local player = game.Players.LocalPlayer
 
     local function warningNotification(title, text, delay)
         local suc, res = pcall(function()
