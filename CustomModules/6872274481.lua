@@ -9973,7 +9973,7 @@ run(function()
 		["Name"] = "SkyThemeChanger",
 		["Function"] = function(callback) 
 			if callback then
-				AvaiableThemes[SelectedTheme["Value"]()
+				AvaiableThemes[SelectedTheme["Value"]]()
 			else
 				game.Lighting.Sky.SkyboxBk = "http://www.roblox.com/asset/?id=7018684000"
 				game.Lighting.Sky.SkyboxDn = "http://www.roblox.com/asset/?id=6334928194"
