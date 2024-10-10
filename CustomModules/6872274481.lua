@@ -10004,25 +10004,24 @@ end)
 
 -- Test Modules --
 
-local function isPlayerAlive(player)
-    player = player or lplr
-    if player.Character and player.Character:FindFirstChild("Head") 
-       and player.Character:FindFirstChild("Humanoid") 
-       and player.Character.Humanoid.Health > 0.1 then
-        return true
-    end
-    return false
+local function playerAlive(plr)
+    plr = plr or lplr
+    local character = plr.Character
+    if not character then return false end
+    local humanoid = character:FindFirstChild("Humanoid")
+    if not humanoid or humanoid.Health < 0.11 then return false end
+    return character:FindFirstChild("Head") ~= nil
 end
 
-local function performCloneAndMove()
+local function handleClone()
     lplr.Character.Archivable = true
-    local characterClone = lplr.Character:Clone()
-    characterClone.Parent = workspace
-    characterClone.Head:ClearAllChildren()
+    local clone = lplr.Character:Clone()
+    clone.Parent = workspace
+    clone.Head:ClearAllChildren()
 
-    gameCamera.CameraSubject = characterClone:FindFirstChild("Humanoid")
-    
-    for _, obj in pairs(characterClone:GetChildren()) do
+    gameCamera.CameraSubject = clone:FindFirstChild("Humanoid")
+
+    for _, obj in pairs(clone:GetChildren()) do
         if obj:IsA("BasePart") and obj.Name ~= "HumanoidRootPart" then
             obj.Transparency = 1
         elseif obj:IsA("Accessory") then
@@ -10033,10 +10032,10 @@ local function performCloneAndMove()
     lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, 100000, 0)
 
     game:GetService("RunService").RenderStepped:Connect(function()
-        if characterClone and characterClone:FindFirstChild("HumanoidRootPart") then
-            characterClone.HumanoidRootPart.Position = Vector3.new(
+        if clone and clone:FindFirstChild("HumanoidRootPart") then
+            clone.HumanoidRootPart.Position = Vector3.new(
                 lplr.Character.HumanoidRootPart.Position.X,
-                characterClone.HumanoidRootPart.Position.Y,
+                clone.HumanoidRootPart.Position.Y,
                 lplr.Character.HumanoidRootPart.Position.Z
             )
         end
@@ -10049,21 +10048,21 @@ local function performCloneAndMove()
         lplr.Character.HumanoidRootPart.Velocity.Z
     )
 
-    lplr.Character.HumanoidRootPart.CFrame = characterClone.HumanoidRootPart.CFrame
+    lplr.Character.HumanoidRootPart.CFrame = clone.HumanoidRootPart.CFrame
     gameCamera.CameraSubject = lplr.Character:FindFirstChild("Humanoid")
-    characterClone:Destroy()
+    clone:Destroy()
     task.wait(0.15)
 end
 
-local function processAntiHit()
-    for _, player in pairs(game:GetService("Players"):GetPlayers()) do
-        if player.Team ~= lplr.Team and isPlayerAlive(player) and isPlayerAlive(lplr) then
-            local targetDistance = lplr:DistanceFromCharacter(player.Character:FindFirstChild("HumanoidRootPart").Position)
-            if targetDistance < 25 then
+local function processPlayers()
+    for _, plr in pairs(game:GetService("Players"):GetPlayers()) do
+        if plr.Team ~= lplr.Team and playerAlive(plr) and playerAlive(lplr) then
+            local distance = lplr:DistanceFromCharacter(plr.Character:FindFirstChild("HumanoidRootPart").Position)
+            if distance < 25 then
                 if not lplr.Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity") then
                     repeat task.wait() until bedwarsStore.matchState ~= 0
-                    if player.Character.HumanoidRootPart.Velocity.Y > -50 then
-                        performCloneAndMove()
+                    if not (plr.Character.HumanoidRootPart.Velocity.Y < -50) then
+                        handleClone()
                     end
                 end
             end
@@ -10075,7 +10074,7 @@ run(function()
     local AntiHit = {Enabled = false}
 
     AntiHit = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-        Name = "AntiHitV2",
+        Name = "AntiHit",
         Function = function(state)
             AntiHit.Enabled = state
             if state then
@@ -10087,7 +10086,7 @@ run(function()
                         local infiniteFlyDisabled = not GuiLibrary.ObjectsThatCanBeSaved.InfiniteFlyOptionsButton.Api.Enabled
 
                         if flyDisabled and infiniteFlyDisabled then
-                            processAntiHit()
+                            processPlayers()
                         end
                     end
                 end)
