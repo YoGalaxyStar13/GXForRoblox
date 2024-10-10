@@ -10060,7 +10060,7 @@ run(function()
 
 				local hrp = lplr.Character:FindFirstChild("HumanoidRootPart")
 				if hrp then
-					hrp.CanCollide = false
+					hrp.CanCollide = true
 				end
 			end
 		end
