@@ -10019,7 +10019,7 @@ run(function()
 	local invisanim = Instance.new('Animation');
 	local invistask;
 	local invishumanim;
-	local PhaseDelay = 1
+	local PhaseDelay = 0
 
 	invis = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
 		Name = 'InvisibilityBetter',
@@ -10032,9 +10032,8 @@ run(function()
 
 				local hrp = lplr.Character:FindFirstChild("HumanoidRootPart")
 
-				-- Disable collision for all parts except HumanoidRootPart
 				for _, part in pairs(lplr.Character:GetDescendants()) do
-					if part:IsA("BasePart") and part ~= hrp then
+					if part:IsA("BasePart") then
 						part.CanCollide = false
 					end
 				end
@@ -10070,7 +10069,7 @@ run(function()
 
 				RunLoops:UnbindFromHeartbeat("Phase")
 				for _, part in pairs(lplr.Character:GetDescendants()) do
-					if part:IsA("BasePart") and part ~= hrp then
+					if part:IsA("BasePart") then
 						part.CanCollide = true
 					end
 				end
@@ -10086,7 +10085,7 @@ run(function()
 				if invistask then task.cancel(invistask) end
 
 				for _, part in pairs(lplr.Character:GetDescendants()) do
-					if part:IsA("BasePart") and part ~= hrp then
+					if part:IsA("BasePart") then
 						part.CanCollide = true
 					end
 				end
