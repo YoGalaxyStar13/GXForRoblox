@@ -9749,32 +9749,21 @@ run(function()
 end)
 
 run(function()
-    local DamageIndicator = {["Enabled"] = false}
-    if (not game:IsLoaded()) then game.Loaded:Wait() end
-    local IndicatorMessages = {
-        "GX+ On Top";
-        "Tired of losing? Get GX+";
-        "You look like a clown";
-    }
-    local IndicatorColor = {
-        Color3.new(0.5, 0, 0.5);
-		Color3.new(0, 0, 1);
-    }
-    DamageIndicator = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"]["CreateOptionsButton"]({
-        ["Name"] = "DamageIndicators",
-        ["HoverText"] = "Changes the regular indicator text",
-        ["Function"] = function(callback)
-            if callback then 
-                pcall(function()
-                    workspace.ChildAdded:Connect(function(Child)
-                        if (Child:IsA("Part") and Child.Name == "DamageIndicatorPart") then
-                            local _Message = IndicatorMessages[math.random(1, #IndicatorMessages)];
-                            local _Color = IndicatorColor[math.random(1, #IndicatorColor)];
-                
-                            Child.BillboardGui.Frame.TextLabel.Text = _Message
-                            Child.BillboardGui.Frame.TextLabel.TextColor3 = _Color
-                        end
-                    end)
+    local DamageIndicator = {Enabled = false}
+    repeat wait() until game:IsLoaded()
+    local Indicators = {"GX+ On Top", "Tired of losing? Get GX+", "You look like a clown"}
+    local Color = {Color3.fromRGB(128, 0, 128), Color3.fromRGB(0, 0, 255)}
+
+    DamageIndicator = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
+        Name = "DamageIndicators",
+        HoverText = "Changes the Damage Indicator Text",
+        Function = function(state)
+            if state then
+                workspace.ChildAdded:Connect(function(obj)
+                    if obj:IsA("Part") and obj.Name == "DamageIndicatorPart" then
+                        obj.BillboardGui.Frame.TextLabel.Text = Indicators[math.random(#Indicators)]
+                        obj.BillboardGui.Frame.TextLabel.TextColor3 = Color[math.random(#Color)]
+                    end
                 end)
             end
         end
@@ -10025,26 +10014,6 @@ end)
 
 -- Test Modules --
 
-run(function()
-    local DamageIndicator = {Enabled = false}
-    repeat wait() until game:IsLoaded()
-    local Indicators = {"GX+ On Top", "Tired of losing? Get GX+", "You look like a clown"}
-    local Color = {Color3.fromRGB(128, 0, 128), Color3.fromRGB(0, 0, 255)}
 
-    DamageIndicator = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
-        Name = "DamageIndicatorsBetter",
-        HoverText = "Changes the Damage Indicator Text",
-        Function = function(state)
-            if state then
-                workspace.ChildAdded:Connect(function(obj)
-                    if obj:IsA("Part") and obj.Name == "DamageIndicatorPart" then
-                        obj.BillboardGui.Frame.TextLabel.Text = Indicators[math.random(#Indicators)]
-                        obj.BillboardGui.Frame.TextLabel.TextColor3 = Color[math.random(#Color)]
-                    end
-                end)
-            end
-        end
-    })
-end)
 
 -- Test Modules Over --
