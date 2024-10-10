@@ -10004,34 +10004,39 @@ end)
 
 -- Test Modules --
 
-local function isCharacterAlive(character)
-    return character and character:FindFirstChild("Head") and character:FindFirstChild("Humanoid") and character.Humanoid.Health > 0.1
+local function isPlayerAlive(player)
+    player = player or lplr
+    if player.Character and player.Character:FindFirstChild("Head") 
+       and player.Character:FindFirstChild("Humanoid") 
+       and player.Character.Humanoid.Health > 0.1 then
+        return true
+    end
+    return false
 end
 
-local function isPlayerValid(player)
-    return player and player.Team ~= lplr.Team and isCharacterAlive(player.Character)
-end
-
-local function handleClone(characterClone)
-    if not characterClone then return end
+local function performCloneAndMove()
+    lplr.Character.Archivable = true
+    local characterClone = lplr.Character:Clone()
+    characterClone.Parent = workspace
     characterClone.Head:ClearAllChildren()
-    gameCamera.CameraSubject = characterClone:FindFirstChild("Humanoid")
 
-    for _, part in ipairs(characterClone:GetChildren()) do
-        if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
-            part.Transparency = 1
-        elseif part:IsA("Accessory") then
-            part.Handle.Transparency = 1
+    gameCamera.CameraSubject = characterClone:FindFirstChild("Humanoid")
+    
+    for _, obj in pairs(characterClone:GetChildren()) do
+        if obj:IsA("BasePart") and obj.Name ~= "HumanoidRootPart" then
+            obj.Transparency = 1
+        elseif obj:IsA("Accessory") then
+            obj.Handle.Transparency = 1
         end
     end
 
     lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, 100000, 0)
 
     game:GetService("RunService").RenderStepped:Connect(function()
-        if characterClone:FindFirstChild("HumanoidRootPart") then
+        if characterClone and characterClone:FindFirstChild("HumanoidRootPart") then
             characterClone.HumanoidRootPart.Position = Vector3.new(
-                lplr.Character.HumanoidRootPart.Position.X, 
-                characterClone.HumanoidRootPart.Position.Y, 
+                lplr.Character.HumanoidRootPart.Position.X,
+                characterClone.HumanoidRootPart.Position.Y,
                 lplr.Character.HumanoidRootPart.Position.Z
             )
         end
@@ -10039,26 +10044,27 @@ local function handleClone(characterClone)
 
     task.wait(0.3)
     lplr.Character.HumanoidRootPart.Velocity = Vector3.new(
-        lplr.Character.HumanoidRootPart.Velocity.X, 
-        -1, 
+        lplr.Character.HumanoidRootPart.Velocity.X,
+        -1,
         lplr.Character.HumanoidRootPart.Velocity.Z
     )
+
     lplr.Character.HumanoidRootPart.CFrame = characterClone.HumanoidRootPart.CFrame
     gameCamera.CameraSubject = lplr.Character:FindFirstChild("Humanoid")
     characterClone:Destroy()
     task.wait(0.15)
 end
 
-local function performAntiHit(player)
-    if isPlayerValid(player) and lplr.Character:FindFirstChild("HumanoidRootPart") then
-        local targetDistance = lplr:DistanceFromCharacter(player.Character.HumanoidRootPart.Position)
-        if targetDistance < 25 then
-            if not lplr.Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity") then
-                repeat task.wait() until bedwarsStore.matchState ~= 0
-                if player.Character.HumanoidRootPart.Velocity.Y > -50 then
-                    local characterClone = lplr.Character:Clone()
-                    characterClone.Parent = workspace
-                    handleClone(characterClone)
+local function processAntiHit()
+    for _, player in pairs(game:GetService("Players"):GetPlayers()) do
+        if player.Team ~= lplr.Team and isPlayerAlive(player) and isPlayerAlive(lplr) then
+            local targetDistance = lplr:DistanceFromCharacter(player.Character:FindFirstChild("HumanoidRootPart").Position)
+            if targetDistance < 25 then
+                if not lplr.Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity") then
+                    repeat task.wait() until bedwarsStore.matchState ~= 0
+                    if player.Character.HumanoidRootPart.Velocity.Y > -50 then
+                        performCloneAndMove()
+                    end
                 end
             end
         end
@@ -10067,23 +10073,21 @@ end
 
 run(function()
     local AntiHit = {Enabled = false}
-    
+
     AntiHit = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-        Name = "AntiHitMyVersion",
+        Name = "AntiHitV2",
         Function = function(state)
             AntiHit.Enabled = state
             if state then
                 spawn(function()
                     while task.wait() do
                         if not AntiHit.Enabled then return end
-                        
-                        local flyInactive = not GuiLibrary.ObjectsThatCanBeSaved.FlyOptionsButton.Api.Enabled
-                        local infiniteFlyInactive = not GuiLibrary.ObjectsThatCanBeSaved.InfiniteFlyOptionsButton.Api.Enabled
-                        
-                        if flyInactive and infiniteFlyInactive then
-                            for _, player in ipairs(game:GetService("Players"):GetChildren()) do
-                                performAntiHit(player)
-                            end
+
+                        local flyDisabled = not GuiLibrary.ObjectsThatCanBeSaved.FlyOptionsButton.Api.Enabled
+                        local infiniteFlyDisabled = not GuiLibrary.ObjectsThatCanBeSaved.InfiniteFlyOptionsButton.Api.Enabled
+
+                        if flyDisabled and infiniteFlyDisabled then
+                            processAntiHit()
                         end
                     end
                 end)
@@ -10091,6 +10095,5 @@ run(function()
         end
     })
 end)
-
 
 -- Test Modules Over --
