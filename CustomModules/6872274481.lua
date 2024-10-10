@@ -10023,13 +10023,13 @@ run(function()
 
 	invis = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
 		Name = 'InvisibilityBetter',
-		HoverText = 'Makes you Invisible',
+		HoverText = 'Makes you Invisible from anyone',
 		Function = function(calling)
 			local invisFunction = function()
 				pcall(task.cancel, invistask);
 				pcall(function() invisrenderstep:Disconnect() end);
 				repeat task.wait() until isAlive(lplr, true);
-				for i,v in lplr.Character:GetDescendants() do 
+				for i,v in pairs(lplr.Character:GetDescendants()) do 
 					pcall(function()
 						if v.ClassName:lower():find('part') and v.CanCollide and v ~= lplr.Character:FindFirstChild('HumanoidRootPart') then 
 							v.CanCollide = false;
@@ -10047,7 +10047,7 @@ run(function()
 				end));
 				task.spawn(function()
 					invisrenderstep = runservice.Stepped:Connect(function()
-						for i,v in invisbaseparts do 
+						for i,v in pairs(invisbaseparts) do 
 							v.CanCollide = false;
 						end
 					end);
