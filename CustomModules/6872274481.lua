@@ -9432,7 +9432,6 @@ run(function()
     local TweenSpeed = 0.7
     local HeightOffset = 5
     local PlayerTP = {}
-    local TweenService = game:GetService("TweenService")
     local player = game.Players.LocalPlayer
 
     local function warningNotification(title, text, delay)
