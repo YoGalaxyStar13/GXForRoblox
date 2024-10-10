@@ -10014,6 +10014,57 @@ end)
 
 -- Test Modules --
 
+run(function()
+	local invis = {};
+	local invisanim = Instance.new('Animation');
+	local invistask;
+	local invishumanim;
 
+	invis = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+		Name = 'InvisibilityBetter',
+		HoverText = 'Makes you Invisible',
+		Function = function(calling)
+			local invisFunction = function()
+				if invistask then task.cancel(invistask) end
+
+				repeat task.wait() until lplr and lplr.Character and lplr.Character:FindFirstChild("Humanoid")
+
+				local hrp = lplr.Character:FindFirstChild("HumanoidRootPart")
+
+				if hrp then
+					hrp.CanCollide = false
+				end
+
+				invisanim.AnimationId = 'rbxassetid://11335949902';
+				local anim = lplr.Character.Humanoid:LoadAnimation(invisanim);
+				invishumanim = anim;
+
+				repeat 
+					task.wait()
+					anim:Play(0.1, 9e9, 0.1)
+				until not invis.Enabled
+
+				if hrp then
+					hrp.CanCollide = true
+				end
+			end
+
+			if calling then
+				invistask = task.spawn(invisFunction);
+				table.insert(invis.Connections, lplr.CharacterAdded:Connect(invisFunction))
+			else
+				if invishumanim then
+					invishumanim:Stop();
+				end
+				if invistask then task.cancel(invistask) end
+
+				local hrp = lplr.Character:FindFirstChild("HumanoidRootPart")
+				if hrp then
+					hrp.CanCollide = true
+				end
+			end
+		end
+	})
+end)
 
 -- Test Modules Over --
