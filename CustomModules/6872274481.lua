@@ -10019,10 +10019,11 @@ run(function()
 	local invisanim = Instance.new('Animation');
 	local invistask;
 	local invishumanim;
+	local invisbaseparts = {};
 
 	invis = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
 		Name = 'InvisibilityBetter',
-		HoverText = 'Makes you Invisible',
+		HoverText = 'Plays an animation which makes it harder\nfor targets to see you and enables phasing through blocks.',
 		Function = function(calling)
 			local invisFunction = function()
 				if invistask then task.cancel(invistask) end
@@ -10030,6 +10031,13 @@ run(function()
 				repeat task.wait() until lplr and lplr.Character and lplr.Character:FindFirstChild("Humanoid")
 
 				local hrp = lplr.Character:FindFirstChild("HumanoidRootPart")
+
+				for _, part in pairs(lplr.Character:GetDescendants()) do
+					if part:IsA("BasePart") and part ~= hrp then
+						part.CanCollide = false
+						table.insert(invisbaseparts, part)
+					end
+				end
 
 				if hrp then
 					hrp.CanCollide = false
@@ -10045,8 +10053,13 @@ run(function()
 				until not invis.Enabled
 
 				if hrp then
-					hrp.CanCollide = false
+					hrp.CanCollide = true
 				end
+
+				for _, part in pairs(invisbaseparts) do
+					part.CanCollide = true
+				end
+				invisbaseparts = {}
 			end
 
 			if calling then
@@ -10062,6 +10075,11 @@ run(function()
 				if hrp then
 					hrp.CanCollide = true
 				end
+
+				for _, part in pairs(invisbaseparts) do
+					part.CanCollide = true
+				end
+				invisbaseparts = {}
 			end
 		end
 	})
