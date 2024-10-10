@@ -10032,7 +10032,7 @@ run(function()
 				local hrp = lplr.Character:FindFirstChild("HumanoidRootPart")
 
 				if hrp then
-					hrp.CanCollide = false
+					hrp.CanCollide = true
 				end
 
 				invisanim.AnimationId = 'rbxassetid://11335949902';
@@ -10045,7 +10045,7 @@ run(function()
 				until not invis.Enabled
 
 				if hrp then
-					hrp.CanCollide = true
+					hrp.CanCollide = false
 				end
 			end
 
@@ -10060,7 +10060,7 @@ run(function()
 
 				local hrp = lplr.Character:FindFirstChild("HumanoidRootPart")
 				if hrp then
-					hrp.CanCollide = true
+					hrp.CanCollide = false
 				end
 			end
 		end
