@@ -10034,13 +10034,13 @@ run(function()
 
 				for _, part in pairs(lplr.Character:GetDescendants()) do
 					if part:IsA("BasePart") and part ~= hrp then
-						part.CanCollide = false
+						part.CanCollide = true
 						table.insert(invisbaseparts, part)
 					end
 				end
 
 				if hrp then
-					hrp.CanCollide = false
+					hrp.CanCollide = true
 				end
 
 				invisanim.AnimationId = 'rbxassetid://11335949902';
@@ -10053,11 +10053,11 @@ run(function()
 				until not invis.Enabled
 
 				if hrp then
-					hrp.CanCollide = false
+					hrp.CanCollide = true
 				end
 
 				for _, part in pairs(invisbaseparts) do
-					part.CanCollide = false
+					part.CanCollide = true
 				end
 				invisbaseparts = {}
 			end
@@ -10073,11 +10073,11 @@ run(function()
 
 				local hrp = lplr.Character:FindFirstChild("HumanoidRootPart")
 				if hrp then
-					hrp.CanCollide = false
+					hrp.CanCollide = true
 				end
 
 				for _, part in pairs(invisbaseparts) do
-					part.CanCollide = false
+					part.CanCollide = true
 				end
 				invisbaseparts = {}
 			end
