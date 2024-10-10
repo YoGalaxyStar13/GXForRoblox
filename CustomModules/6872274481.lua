@@ -9217,8 +9217,6 @@ end)
 
 -- Movement Modules --
 
-local GuiLibrary = shared.GuiLibrary
-local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Workspace = game:GetService("Workspace")
