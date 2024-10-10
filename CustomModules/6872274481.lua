@@ -10082,5 +10082,43 @@ run(function()
 	})
 end)
 
+run(function()
+	local invis = {};
+	local invisanim = Instance.new('Animation');
+	local invistask;
+	local invishumanim;
+
+	invis = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+		Name = 'InvisibilityV2',
+		HoverText = 'Plays an animation which makes it harder\nfor targets to see you.',
+		Function = function(calling)
+			local invisFunction = function()
+				if invistask then task.cancel(invistask) end
+
+				repeat task.wait() until lplr and lplr.Character and lplr.Character:FindFirstChild("Humanoid")
+
+				invisanim.AnimationId = 'rbxassetid://11335949902';
+				local anim = lplr.Character.Humanoid:LoadAnimation(invisanim);
+				invishumanim = anim;
+
+				repeat 
+					task.wait()
+					anim:Play(0.1, 9e9, 0.1)
+				until not invis.Enabled
+			end
+
+			if calling then
+				invistask = task.spawn(invisFunction);
+				table.insert(invis.Connections, lplr.CharacterAdded:Connect(invisFunction))
+			else
+				if invishumanim then
+					invishumanim:Stop();
+				end
+				if invistask then task.cancel(invistask) end
+			end
+		end
+	})
+end)
+
 
 -- Test Modules Over --
