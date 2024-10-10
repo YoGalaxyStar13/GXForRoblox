@@ -10023,25 +10023,36 @@ run(function()
 
 	invis = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
 		Name = 'InvisibilityBetter',
-		HoverText = 'Plays an animation which makes it harder\nfor targets to see you and enables phasing through blocks.',
+		HoverText = 'Makes you Invisible',
 		Function = function(calling)
 			local invisFunction = function()
-				if invistask then task.cancel(invistask) end
-
-				repeat task.wait() until lplr and lplr.Character and lplr.Character:FindFirstChild("Humanoid")
-
-				local hrp = lplr.Character:FindFirstChild("HumanoidRootPart")
-
-				for _, part in pairs(lplr.Character:GetDescendants()) do
-					if part:IsA("BasePart") and part ~= hrp then
-						part.CanCollide = true
-						table.insert(invisbaseparts, part)
-					end
-				end
-
-				if hrp then
-					hrp.CanCollide = true
-				end
+				pcall(task.cancel, invistask);
+				pcall(function() invisrenderstep:Disconnect() end);
+				repeat task.wait() until isAlive(lplr, true);
+				for i,v in lplr.Character:GetDescendants() do 
+					pcall(function()
+						if v.ClassName:lower():find('part') and v.CanCollide and v ~= lplr.Character:FindFirstChild('HumanoidRootPart') then 
+							v.CanCollide = false;
+							table.insert(invisbaseparts, v);
+						end 
+					end)
+				end;
+				table.insert(invis.Connections, lplr.Character.DescendantAdded:Connect(function(v)
+					pcall(function()
+						if v.ClassName:lower():find('part') and v.CanCollide and v ~= lplr.Character:FindFirstChild('HumanoidRootPart') then 
+							v.CanCollide = false;
+							table.insert(invisbaseparts, v);
+						end
+					end) 
+				end));
+				task.spawn(function()
+					invisrenderstep = runservice.Stepped:Connect(function()
+						for i,v in invisbaseparts do 
+							v.CanCollide = false;
+						end
+					end);
+					table.insert(invis.Connections, invisrenderstep);
+				end)
 
 				invisanim.AnimationId = 'rbxassetid://11335949902';
 				local anim = lplr.Character.Humanoid:LoadAnimation(invisanim);
@@ -10051,10 +10062,6 @@ run(function()
 					task.wait()
 					anim:Play(0.1, 9e9, 0.1)
 				until not invis.Enabled
-
-				if hrp then
-					hrp.CanCollide = true
-				end
 
 				for _, part in pairs(invisbaseparts) do
 					part.CanCollide = true
@@ -10070,11 +10077,6 @@ run(function()
 					invishumanim:Stop();
 				end
 				if invistask then task.cancel(invistask) end
-
-				local hrp = lplr.Character:FindFirstChild("HumanoidRootPart")
-				if hrp then
-					hrp.CanCollide = true
-				end
 
 				for _, part in pairs(invisbaseparts) do
 					part.CanCollide = true
