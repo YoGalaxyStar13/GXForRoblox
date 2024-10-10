@@ -10097,8 +10097,10 @@ run(function()
 
 				repeat task.wait() until lplr and lplr.Character and lplr.Character:FindFirstChild("Humanoid")
 
+				local hrp = lplr.Character:FindFirstChild("HumanoidRootPart")
+
 				for _, part in pairs(lplr.Character:GetDescendants()) do
-					if part:IsA("BasePart") and part ~= lplr.Character:FindFirstChild("HumanoidRootPart") then
+					if part:IsA("BasePart") and part ~= hrp then
 						part.CanCollide = false
 					end
 				end
@@ -10113,7 +10115,7 @@ run(function()
 				until not invis.Enabled
 
 				for _, part in pairs(lplr.Character:GetDescendants()) do
-					if part:IsA("BasePart") and part ~= lplr.Character:FindFirstChild("HumanoidRootPart") then
+					if part:IsA("BasePart") and part ~= hrp then
 						part.CanCollide = true
 					end
 				end
@@ -10129,7 +10131,7 @@ run(function()
 				if invistask then task.cancel(invistask) end
 
 				for _, part in pairs(lplr.Character:GetDescendants()) do
-					if part:IsA("BasePart") and part ~= lplr.Character:FindFirstChild("HumanoidRootPart") then
+					if part:IsA("BasePart") and part ~= hrp then
 						part.CanCollide = true
 					end
 				end
