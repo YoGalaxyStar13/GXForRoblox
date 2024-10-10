@@ -9908,16 +9908,6 @@ run(function()
 				game.Lighting.Sky.SkyboxUp = "http://www.roblox.com/asset/?id=144931564"
 			end)
 		end,
-        ["AnimeSky"] = function() 
-			task.spawn(function()
-				game.Lighting.Sky.SkyboxBk = "http://www.roblox.com/asset/?id=6778646360"
-				game.Lighting.Sky.SkyboxDn = "http://www.roblox.com/asset/?id=6778658683"
-				game.Lighting.Sky.SkyboxFt = "http://www.roblox.com/asset/?id=6778648039"
-				game.Lighting.Sky.SkyboxLf = "http://www.roblox.com/asset/?id=6778649136"
-				game.Lighting.Sky.SkyboxRt = "http://www.roblox.com/asset/?id=6778650519"
-				game.Lighting.Sky.SkyboxUp = "http://www.roblox.com/asset/?id=6778658364"
-			end)
-        end,
         ["PinkSky"] = function() 
 			task.spawn(function()
 				game.Lighting.Sky.SkyboxBk = "http://www.roblox.com/asset/?id=271042516"
@@ -10004,7 +9994,7 @@ run(function()
 	SelectedTheme = ThemeChanger.CreateDropdown({
 		["Name"] = "Theme",
 		["Function"] = function() end,
-		["List"] = {"ChillPurpleSky","SpaceSky","MidNightPurpleSky", "RealisticSky", "Darkness", "MountainSky", "Chill", "RainySky", "AnimeSky", "StormyNight", "PinkSky", "RainyNight", "AstroidBelt", "MoonLight"}
+		["List"] = {"ChillPurpleSky","SpaceSky","MidNightPurpleSky", "RealisticSky", "Darkness", "MountainSky", "Chill", "RainySky", "StormyNight", "PinkSky", "RainyNight", "AstroidBelt", "MoonLight"}
 	})
 end)
 
