@@ -9973,7 +9973,7 @@ run(function()
 		["Name"] = "SkyThemeChanger",
 		["Function"] = function(callback) 
 			if callback then
-				AvaiableThemes[SelectedTheme["Value"]]()
+				AvaiableThemes[SelectedTheme["Value"]()
 			else
 				game.Lighting.Sky.SkyboxBk = "http://www.roblox.com/asset/?id=7018684000"
 				game.Lighting.Sky.SkyboxDn = "http://www.roblox.com/asset/?id=6334928194"
@@ -10004,6 +10004,93 @@ end)
 
 -- Test Modules --
 
+local function isCharacterAlive(character)
+    return character and character:FindFirstChild("Head") and character:FindFirstChild("Humanoid") and character.Humanoid.Health > 0.1
+end
+
+local function isPlayerValid(player)
+    return player and player.Team ~= lplr.Team and isCharacterAlive(player.Character)
+end
+
+local function handleClone(characterClone)
+    if not characterClone then return end
+    characterClone.Head:ClearAllChildren()
+    gameCamera.CameraSubject = characterClone:FindFirstChild("Humanoid")
+
+    for _, part in ipairs(characterClone:GetChildren()) do
+        if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
+            part.Transparency = 1
+        elseif part:IsA("Accessory") then
+            part.Handle.Transparency = 1
+        end
+    end
+
+    lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, 100000, 0)
+
+    game:GetService("RunService").RenderStepped:Connect(function()
+        if characterClone:FindFirstChild("HumanoidRootPart") then
+            characterClone.HumanoidRootPart.Position = Vector3.new(
+                lplr.Character.HumanoidRootPart.Position.X, 
+                characterClone.HumanoidRootPart.Position.Y, 
+                lplr.Character.HumanoidRootPart.Position.Z
+            )
+        end
+    end)
+
+    task.wait(0.3)
+    lplr.Character.HumanoidRootPart.Velocity = Vector3.new(
+        lplr.Character.HumanoidRootPart.Velocity.X, 
+        -1, 
+        lplr.Character.HumanoidRootPart.Velocity.Z
+    )
+    lplr.Character.HumanoidRootPart.CFrame = characterClone.HumanoidRootPart.CFrame
+    gameCamera.CameraSubject = lplr.Character:FindFirstChild("Humanoid")
+    characterClone:Destroy()
+    task.wait(0.15)
+end
+
+local function performAntiHit(player)
+    if isPlayerValid(player) and lplr.Character:FindFirstChild("HumanoidRootPart") then
+        local targetDistance = lplr:DistanceFromCharacter(player.Character.HumanoidRootPart.Position)
+        if targetDistance < 25 then
+            if not lplr.Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity") then
+                repeat task.wait() until bedwarsStore.matchState ~= 0
+                if player.Character.HumanoidRootPart.Velocity.Y > -50 then
+                    local characterClone = lplr.Character:Clone()
+                    characterClone.Parent = workspace
+                    handleClone(characterClone)
+                end
+            end
+        end
+    end
+end
+
+run(function()
+    local AntiHit = {Enabled = false}
+    
+    AntiHit = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+        Name = "AntiHitMyVersion",
+        Function = function(state)
+            AntiHit.Enabled = state
+            if state then
+                spawn(function()
+                    while task.wait() do
+                        if not AntiHit.Enabled then return end
+                        
+                        local flyInactive = not GuiLibrary.ObjectsThatCanBeSaved.FlyOptionsButton.Api.Enabled
+                        local infiniteFlyInactive = not GuiLibrary.ObjectsThatCanBeSaved.InfiniteFlyOptionsButton.Api.Enabled
+                        
+                        if flyInactive and infiniteFlyInactive then
+                            for _, player in ipairs(game:GetService("Players"):GetChildren()) do
+                                performAntiHit(player)
+                            end
+                        end
+                    end
+                end)
+            end
+        end
+    })
+end)
 
 
 -- Test Modules Over --
