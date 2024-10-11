@@ -3540,8 +3540,7 @@ run(function()
 		Name = "Range Visualizer",
 		Function = function(callback)
 			if callback then
-				--context issues moment
-			--[[	killaurarangecirclepart = Instance.new("MeshPart")
+				killaurarangecirclepart = Instance.new("MeshPart")
 				killaurarangecirclepart.MeshId = "rbxassetid://3726303797"
 				killaurarangecirclepart.Color = Color3.fromHSV(killauracolor["Hue"], killauracolor["Sat"], killauracolor.Value)
 				killaurarangecirclepart.CanCollide = false
@@ -3551,7 +3550,7 @@ run(function()
 				if Killaura.Enabled then
 					killaurarangecirclepart.Parent = gameCamera
 				end
-				bedwars.QueryUtil:setQueryIgnored(killaurarangecirclepart, true)]]
+				bedwars.QueryUtil:setQueryIgnored(killaurarangecirclepart, true)
 			else
 				if killaurarangecirclepart then
 					killaurarangecirclepart:Destroy()
