@@ -3582,6 +3582,36 @@ run(function()
 			end
 		end
 	})	
+	killaurarangecircle = Killaura.CreateToggle({
+		Name = "Range Visualizer Fix",
+		Function = function(callback)
+			if callback then
+				killaurarangecirclepart = Instance.new("MeshPart")
+				killaurarangecirclepart.MeshId = "rbxassetid://3726303797"
+				killaurarangecirclepart.Color = Color3.fromRGB(0, 0, 255)
+				killaurarangecirclepart.CanCollide = false
+				killaurarangecirclepart.Anchored = true
+				killaurarangecirclepart.Material = Enum.Material.Neon
+				killaurarangecirclepart.Size = Vector3.new(killaurarange.Value * 0.7, 0.01, killaurarange.Value * 0.7)
+				if Killaura.Enabled then
+					killaurarangecirclepart.Parent = gameCamera
+				end
+				bedwars.QueryUtil:setQueryIgnored(killaurarangecirclepart, true)
+				local h = 0
+				local s = 1
+				local v = 1
+				lightingService.ColorShift_Bottom = Color3.fromHSV(h, s, v)
+				lightingService.ColorShift_Top = Color3.fromHSV(h, s, v)
+				lightingService.OutdoorAmbient = Color3.fromHSV(h, s, v)
+				lightingService.FogColor = Color3.fromHSV(h, s, v)
+			else
+				if killaurarangecirclepart then
+					killaurarangecirclepart:Destroy()
+					killaurarangecirclepart = nil
+				end
+			end
+		end
+	})
 	killauraaimcircle = Killaura.CreateToggle({
 		Name = "Aim Visualizer",
 		Function = function(callback)
