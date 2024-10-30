@@ -9829,7 +9829,7 @@ end)
 local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-local maxSpeed = 25
+local maxSpeed = 40
 local disablerEnabled = false
 
 local function toggleDisabler(state)
