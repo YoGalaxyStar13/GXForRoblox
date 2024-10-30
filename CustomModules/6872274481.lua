@@ -1,3 +1,4 @@
+--This watermark is used to delete the file if its cached, remove it to make the file persist after commits.
 local GuiLibrary = shared.GuiLibrary
 local playersService = game:GetService("Players")
 local textService = game:GetService("TextService")
@@ -9825,6 +9826,33 @@ end)
 
 -- Test Modules --
 
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local maxSpeed = 25
+local disablerEnabled = false
 
+local function toggleDisabler(state)
+    disablerEnabled = state
+end
+
+local function move()
+    if disablerEnabled then
+        local randomSpeed = math.random(10, maxSpeed) / 10
+        local moveDirection = humanoidRootPart.CFrame.LookVector * randomSpeed
+        humanoidRootPart.CFrame = humanoidRootPart.CFrame + moveDirection
+        wait(math.random(1, 3) / 10)
+    end
+end
+
+GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+    Name = "Semi Speed Disabler",
+    Function = function(callback)
+        toggleDisabler(callback)
+        while disablerEnabled do
+            move()
+        end
+    end
+})
 
 -- Test Modules Over --
