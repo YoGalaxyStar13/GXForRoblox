@@ -8298,7 +8298,7 @@ run(function()
 	local luckyblocktable = {}
 
 	Nuker = GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton({
-		Name = "Nuker",
+		Name = "Breaker",
 		Function = function(callback)
 			if callback then
 				for i,v in pairs(store.blocks) do
