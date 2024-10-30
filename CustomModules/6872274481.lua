@@ -9838,13 +9838,12 @@ end
 
 local function toggleDisabler(state)
     disablerEnabled = state
-end
-
-local function move()
-    if disablerEnabled and humanoidRootPart then
-        local moveDirection = humanoidRootPart.CFrame.LookVector * (maxSpeed / 20)
-        humanoidRootPart.CFrame = humanoidRootPart.CFrame + moveDirection
-        wait(0.1)
+    if disablerEnabled then
+        while disablerEnabled and humanoidRootPart do
+            local moveDirection = humanoidRootPart.CFrame.LookVector * (maxSpeed / 20)
+            humanoidRootPart.CFrame = humanoidRootPart.CFrame + moveDirection
+            wait(0.1)
+        end
     end
 end
 
@@ -9855,9 +9854,6 @@ GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
     Name = "Disabler",
     Function = function(callback)
         toggleDisabler(callback)
-        while disablerEnabled do
-            move()
-        end
     end
 })
 
