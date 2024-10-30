@@ -9827,23 +9827,29 @@ end)
 -- Test Modules --
 
 local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 local maxSpeed = 40
 local disablerEnabled = false
+local humanoidRootPart
+
+local function updateCharacter()
+    local character = player.Character or player.CharacterAdded:Wait()
+    humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+end
 
 local function toggleDisabler(state)
     disablerEnabled = state
 end
 
 local function move()
-    if disablerEnabled then
-        local randomSpeed = math.random(10, maxSpeed) / 10
-        local moveDirection = humanoidRootPart.CFrame.LookVector * randomSpeed
+    if disablerEnabled and humanoidRootPart then
+        local moveDirection = humanoidRootPart.CFrame.LookVector * (maxSpeed / 20)
         humanoidRootPart.CFrame = humanoidRootPart.CFrame + moveDirection
-        wait(math.random(1, 3) / 10)
+        wait(0.1)
     end
 end
+
+player.CharacterAdded:Connect(updateCharacter)
+updateCharacter()
 
 GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
     Name = "Disabler",
