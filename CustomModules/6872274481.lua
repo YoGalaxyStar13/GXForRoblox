@@ -9827,7 +9827,7 @@ end)
 -- Test Modules --
 
 local player = game.Players.LocalPlayer
-local maxSpeed = 5 
+local maxSpeed = 4.23
 local disablerEnabled = false
 local humanoidRootPart
 
