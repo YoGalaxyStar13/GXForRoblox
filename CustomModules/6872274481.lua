@@ -9826,35 +9826,6 @@ end)
 
 -- Test Modules --
 
-local player = game.Players.LocalPlayer
-local maxSpeed = 40
-local disablerEnabled = false
-local humanoidRootPart
 
-local function updateCharacter()
-    local character = player.Character or player.CharacterAdded:Wait()
-    humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-end
-
-local function toggleDisabler(state)
-    disablerEnabled = state
-    if disablerEnabled then
-        while disablerEnabled and humanoidRootPart do
-            local moveDirection = humanoidRootPart.CFrame.LookVector * (maxSpeed / 2)
-            humanoidRootPart.CFrame = humanoidRootPart.CFrame + moveDirection
-            wait(0.001)
-        end
-    end
-end
-
-player.CharacterAdded:Connect(updateCharacter)
-updateCharacter()
-
-GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-    Name = "Disabler",
-    Function = function(callback)
-        toggleDisabler(callback)
-    end
-})
 
 -- Test Modules Over --
