@@ -9846,7 +9846,7 @@ local function move()
 end
 
 GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-    Name = "Semi Speed Disabler",
+    Name = "Disabler",
     Function = function(callback)
         toggleDisabler(callback)
         while disablerEnabled do
