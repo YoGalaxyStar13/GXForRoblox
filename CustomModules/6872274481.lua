@@ -9857,4 +9857,27 @@ GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
     end
 })
 
+run(function()
+	local Blink = {Enabled = false}
+	Blink = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+		Name = "Blink",
+		Function = function(callback)
+			if callback then
+				if sethiddenproperty then
+					RunLoops:BindToHeartbeat("Blink", function()
+						if entityLibrary.isAlive then
+							sethiddenproperty(entityLibrary.character.HumanoidRootPart, "NetworkIsSleeping", true)
+						end
+					end)
+				else
+					warningNotification("Blink", "missing function", 5)
+					Blink.ToggleButton(false)
+				end
+			else
+				RunLoops:UnbindFromHeartbeat("Blink")
+			end
+		end
+	})
+end)
+
 -- Test Modules Over --
