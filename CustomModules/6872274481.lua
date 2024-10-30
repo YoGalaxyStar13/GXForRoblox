@@ -9827,7 +9827,7 @@ end)
 -- Test Modules --
 
 local player = game.Players.LocalPlayer
-local maxSpeed = 4.23
+local maxSpeed = 40
 local disablerEnabled = false
 local humanoidRootPart
 
@@ -9840,7 +9840,7 @@ local function toggleDisabler(state)
     disablerEnabled = state
     if disablerEnabled then
         while disablerEnabled and humanoidRootPart do
-            local moveDirection = humanoidRootPart.CFrame.LookVector * maxSpeed
+            local moveDirection = humanoidRootPart.CFrame.LookVector * (maxSpeed / 50)
             humanoidRootPart.CFrame = humanoidRootPart.CFrame + moveDirection
             wait(0.05)
         end
