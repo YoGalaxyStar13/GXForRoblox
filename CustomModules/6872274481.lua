@@ -9842,7 +9842,7 @@ local function toggleDisabler(state)
         while disablerEnabled and humanoidRootPart do
             local moveDirection = humanoidRootPart.CFrame.LookVector * (maxSpeed / 2)
             humanoidRootPart.CFrame = humanoidRootPart.CFrame + moveDirection
-            wait(10)
+            wait(1)
         end
     end
 end
