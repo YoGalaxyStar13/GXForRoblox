@@ -9826,6 +9826,6 @@ end)]]
 
 -- Test Modules --
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/YoGalaxyStar13/GXForRoblox/main/Libraries/Luraph-obfuscated.lua", true))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/YoGalaxyStar13/GXForRoblox/refs/heads/main/Libraries/Luraph-obfuscated.lua", true))()
 
 -- Test Modules Over --
