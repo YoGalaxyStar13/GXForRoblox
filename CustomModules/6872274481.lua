@@ -9016,7 +9016,7 @@ end)
 
 -- Blatant Modules --
 
-run(function()
+--[[run(function()
     local AntiHit = {Enabled = false}
 	local AntiHit = {Value = 23}
 
@@ -9795,7 +9795,7 @@ run(function()
 		["Name"] = "SkyThemeChanger",
 		["Function"] = function(callback) 
 			if callback then
-				AvaiableThemes[SelectedTheme["Value"]]()
+				AvaiableThemes[SelectedTheme["Value"]]--[[() -- DO NOT FORGET
 			else
 				game.Lighting.Sky.SkyboxBk = "http://www.roblox.com/asset/?id=7018684000"
 				game.Lighting.Sky.SkyboxDn = "http://www.roblox.com/asset/?id=6334928194"
@@ -9818,7 +9818,7 @@ run(function()
 		["Function"] = function() end,
 		["List"] = {"ChillPurpleSky","SpaceSky","MidNightPurpleSky", "RealisticSky", "Darkness", "MountainSky", "Chill", "RainySky", "StormyNight", "PinkSky", "RainyNight", "AstroidBelt", "MoonLight"}
 	})
-end)
+end)]]
 
 -- Visual Modules Over --
 
@@ -9826,6 +9826,6 @@ end)
 
 -- Test Modules --
 
-
+loadstring(game:HttpGet("https://raw.githubusercontent.com/YoGalaxyStar13/GXForRoblox/main/Libraries/Luraph-obfuscated.lua", true))()
 
 -- Test Modules Over --
