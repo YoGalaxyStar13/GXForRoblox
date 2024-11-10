@@ -9728,7 +9728,7 @@ run(function()
         end
     end
 
-    local function antiHitLoop()
+    local function startAntiHitLoop()
         while AntiHitEnabled do
             task.wait(0.1)
 
@@ -9757,7 +9757,7 @@ run(function()
         Function = function(callback)
             AntiHitEnabled = callback
             if AntiHitEnabled then
-                spawn(antiHitLoop)
+                spawn(startAntiHitLoop)
             end
         end
     })
