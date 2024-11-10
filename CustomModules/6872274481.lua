@@ -9473,7 +9473,7 @@ end)
 
 
 
--- Visual Modules -- 
+-- Visual Modules --
 
 run(function()
 	local Shader = {Enabled = false}
