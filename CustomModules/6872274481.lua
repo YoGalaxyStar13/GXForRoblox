@@ -9816,17 +9816,23 @@ run(function()
     local AntiHitEnabled = false
 
     local function playerIsAlive(player)
-        if not player or not player.Character then return false end
+        if not player or not player.Character then 
+            print("Player or Character is missing.")
+            return false 
+        end
         local humanoid = player.Character:FindFirstChild("Humanoid")
         return humanoid and humanoid.Health > 0.1
     end
 
     local function teleportOut()
         if Player.Character and Player.Character:FindFirstChild("HumanoidRootPart") then
+            print("Teleporting out to avoid hit.")
             local originalPosition = Player.Character.HumanoidRootPart.CFrame
             Player.Character.HumanoidRootPart.CFrame = originalPosition + Vector3.new(0, 100000, 0)
             task.wait(0.3)
             Player.Character.HumanoidRootPart.CFrame = originalPosition
+        else
+            print("HumanoidRootPart not found.")
         end
     end
 
@@ -9836,6 +9842,7 @@ run(function()
 
             if GuiLibrary.ObjectsThatCanBeSaved.FlyOptionsButton.Api.Enabled 
                 or GuiLibrary.ObjectsThatCanBeSaved.InfiniteFlyOptionsButton.Api.Enabled then
+                print("Fly option is enabled, skipping.")
                 continue
             end
 
@@ -9843,22 +9850,27 @@ run(function()
                 for _, enemy in pairs(game:GetService("Players"):GetPlayers()) do
                     if enemy.Team ~= Player.Team and playerIsAlive(enemy) then
                         local distance = (enemy.Character.HumanoidRootPart.Position - Player.Character.HumanoidRootPart.Position).magnitude
+                        print("Checking enemy at distance:", distance)
                         if distance < AntiHitRange.Value then
                             teleportOut()
                             break
                         end
+                    else
                     end
                 end
+            else
             end
         end
     end
 
+    -- Create the AntiHit toggle button
     GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
         Name = "GXAntiHit",
         Function = function(callback)
             AntiHitEnabled = callback
             if AntiHitEnabled then
                 spawn(antiHitLoop)
+            else
             end
         end
     })
