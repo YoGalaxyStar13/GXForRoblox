@@ -9106,8 +9106,6 @@ run(function()
     local TweenSpeed = 0.7
     local HeightOffset = 10
     local BedTP = {}
-    local TweenService = game:GetService("TweenService")
-    local CollectionService = game:GetService("CollectionService")
     local player = game.Players.LocalPlayer
 
     local function warningNotification(title, text, delay)
@@ -9236,8 +9234,6 @@ run(function()
     local TweenSpeed = 0.7
     local HeightOffset = 5
     local PlayerTP = {}
-    local player = game.Players.LocalPlayer
-    local TweenService = game:GetService("TweenService")
 
     local function warningNotification(title, text, delay)
         local suc, res = pcall(function()
@@ -9263,8 +9259,8 @@ run(function()
         end
     end
 
-    local function killPlayer(player)
-        local character = player.Character
+    local function killPlayer(Player)
+        local character = Player.Character
         if character then
             local humanoid = character:FindFirstChildOfClass("Humanoid")
             if humanoid then
@@ -9357,9 +9353,6 @@ run(function()
 end)
 
 run(function()
-	local TweenService = game:GetService("TweenService")
-	local Players = game:GetService("Players")
-	local Player = Players.LocalPlayer
 
 	local function warningNotification(title, text, delay)
 		local suc, res = pcall(function()
