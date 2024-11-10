@@ -8929,18 +8929,17 @@ end)
 
 -- Blatant Modules --
 
+function IsAlive(plr)
+    plr = plr or lplr
+    if not plr.Character then return false end
+    if not plr.Character:FindFirstChild("Head") then return false end
+    if not plr.Character:FindFirstChild("Humanoid") then return false end
+    if plr.Character:FindFirstChild("Humanoid").Health < 0.11 then return false end
+    return true
+end
+
 run(function()
     local AntiHit = {Enabled = false}
-
-	function IsAlive(plr)
-		plr = plr or Player
-		if not plr.Character then return false end
-		if not plr.Character:FindFirstChild("Head") then return false end
-		if not plr.Character:FindFirstChild("Humanoid") then return false end
-		if plr.Character:FindFirstChild("Humanoid").Health < 0.11 then return false end
-		return true
-	end
-	
     AntiHit = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
         Name = "AntiHit",
         Function = function(callback)
@@ -8950,16 +8949,16 @@ run(function()
 						if (not AntiHit.Enabled) then return end
 						if (not GuiLibrary.ObjectsThatCanBeSaved.FlyOptionsButton.Api.Enabled) and (not GuiLibrary.ObjectsThatCanBeSaved.InfiniteFlyOptionsButton.Api.Enabled) then
 							for i, v in pairs(game:GetService("Players"):GetChildren()) do
-								if v.Team ~= Player.Team and IsAlive(v) and IsAlive(Player) then
-									if v and v ~= Player then
-										local TargetDistance = Player:DistanceFromCharacter(v.Character:FindFirstChild("HumanoidRootPart").CFrame.p)
-										if TargetDistance < AntiHitRange.Value then
-											if not Player.Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity") then
+								if v.Team ~= lplr.Team and IsAlive(v) and IsAlive(lplr) then
+									if v and v ~= lplr then
+										local TargetDistance = lplr:DistanceFromCharacter(v.Character:FindFirstChild("HumanoidRootPart").CFrame.p)
+										if TargetDistance < 25 then
+											if not lplr.Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity") then
 												repeat task.wait() until store.matchState ~= 0
 												if not (v.Character.HumanoidRootPart.Velocity.Y < -10*5) then
-													Player.Character.Archivable = true
+													lplr.Character.Archivable = true
 
-													local Clone = Player.Character:Clone()
+													local Clone = lplr.Character:Clone()
 													Clone.Parent = workspace
 													Clone.Head:ClearAllChildren()
 													gameCamera.CameraSubject = Clone:FindFirstChild("Humanoid")
@@ -8973,20 +8972,20 @@ run(function()
 														end
 													end
 
-													Player.Character.HumanoidRootPart.CFrame = Player.Character.HumanoidRootPart.CFrame + Vector3.new(0,100000,0)
+													lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0,100000,0)
 
 													game:GetService("RunService").RenderStepped:Connect(function()
 														if Clone ~= nil and Clone:FindFirstChild("HumanoidRootPart") then
-															Clone.HumanoidRootPart.Position = Vector3.new(Player.Character.HumanoidRootPart.Position.X, Clone.HumanoidRootPart.Position.Y, Player.Character.HumanoidRootPart.Position.Z)
+															Clone.HumanoidRootPart.Position = Vector3.new(lplr.Character.HumanoidRootPart.Position.X, Clone.HumanoidRootPart.Position.Y, lplr.Character.HumanoidRootPart.Position.Z)
 														end
 													end)
 
 													task.wait(0.3)
-													Player.Character.HumanoidRootPart.Velocity = Vector3.new(Player.Character.HumanoidRootPart.Velocity.X, -1, Player.Character.HumanoidRootPart.Velocity.Z)
-													Player.Character.HumanoidRootPart.CFrame = Clone.HumanoidRootPart.CFrame
-													gameCamera.CameraSubject = Player.Character:FindFirstChild("Humanoid")
+													lplr.Character.HumanoidRootPart.Velocity = Vector3.new(lplr.Character.HumanoidRootPart.Velocity.X, -1, lplr.Character.HumanoidRootPart.Velocity.Z)
+													lplr.Character.HumanoidRootPart.CFrame = Clone.HumanoidRootPart.CFrame
+													gameCamera.CameraSubject = lplr.Character:FindFirstChild("Humanoid")
 													Clone:Destroy()
-													task.wait(0.2)
+													task.wait(0.15)
 												end
 											end
 										end
@@ -9706,61 +9705,6 @@ end)
 
 -- Test Modules --
 
-run(function()
-    local AntiHitEnabled = false
 
-    local function playerIsAlive(player)
-        if player and player.Character then
-            local humanoid = player.Character:FindFirstChild("Humanoid")
-            return humanoid and humanoid.Health > 0.1
-        end
-        return false
-    end
-
-    local function teleportOut()
-        local character = Player.Character
-        if character and character:FindFirstChild("HumanoidRootPart") then
-            local rootPart = character.HumanoidRootPart
-            local originalPosition = rootPart.CFrame
-            rootPart.CFrame = originalPosition + Vector3.new(0, 100000, 0)
-            task.wait(0.3)
-            rootPart.CFrame = originalPosition
-        end
-    end
-
-    local function startAntiHitLoop()
-        while AntiHitEnabled do
-            task.wait(0.1)
-
-            if not GuiLibrary.ObjectsThatCanBeSaved.FlyOptionsButton.Api.Enabled 
-                and not GuiLibrary.ObjectsThatCanBeSaved.InfiniteFlyOptionsButton.Api.Enabled 
-                and Player.Character and Player.Character:FindFirstChild("HumanoidRootPart") then
-                
-                for _, enemy in pairs(game:GetService("Players"):GetPlayers()) do
-                    if enemy.Team ~= Player.Team and playerIsAlive(enemy) then
-                        local enemyRoot = enemy.Character:FindFirstChild("HumanoidRootPart")
-                        if enemyRoot then
-                            local distance = (enemyRoot.Position - Player.Character.HumanoidRootPart.Position).magnitude
-                            if distance < AntiHitRange.Value then
-                                teleportOut()
-                                break
-                            end
-                        end
-                    end
-                end
-            end
-        end
-    end
-
-    GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-        Name = "GXAntiHit",
-        Function = function(callback)
-            AntiHitEnabled = callback
-            if AntiHitEnabled then
-                spawn(startAntiHitLoop)
-            end
-        end
-    })
-end)
 
 -- Test Modules Over --
