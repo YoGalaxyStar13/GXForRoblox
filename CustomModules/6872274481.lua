@@ -9027,6 +9027,7 @@ run(function()
 		if plr.Character:FindFirstChild("Humanoid").Health < 0.11 then return false end
 		return true
 	end
+	
     AntiHit = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
         Name = "AntiHit",
         Function = function(callback)
