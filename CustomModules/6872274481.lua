@@ -9710,17 +9710,21 @@ run(function()
     local AntiHitEnabled = false
 
     local function playerIsAlive(player)
-        if not player or not player.Character then return false end
-        local humanoid = player.Character:FindFirstChild("Humanoid")
-        return humanoid and humanoid.Health > 0.1
+        if player and player.Character then
+            local humanoid = player.Character:FindFirstChild("Humanoid")
+            return humanoid and humanoid.Health > 0.1
+        end
+        return false
     end
 
     local function teleportOut()
-        if Player.Character and Player.Character:FindFirstChild("HumanoidRootPart") then
-            local originalPosition = Player.Character.HumanoidRootPart.CFrame
-            Player.Character.HumanoidRootPart.CFrame = originalPosition + Vector3.new(0, 100000, 0)
+        local character = Player.Character
+        if character and character:FindFirstChild("HumanoidRootPart") then
+            local rootPart = character.HumanoidRootPart
+            local originalPosition = rootPart.CFrame
+            rootPart.CFrame = originalPosition + Vector3.new(0, 100000, 0)
             task.wait(0.3)
-            Player.Character.HumanoidRootPart.CFrame = originalPosition
+            rootPart.CFrame = originalPosition
         end
     end
 
@@ -9728,18 +9732,19 @@ run(function()
         while AntiHitEnabled do
             task.wait(0.1)
 
-            if GuiLibrary.ObjectsThatCanBeSaved.FlyOptionsButton.Api.Enabled 
-                or GuiLibrary.ObjectsThatCanBeSaved.InfiniteFlyOptionsButton.Api.Enabled then
-                continue
-            end
-
-            if Player.Character and Player.Character:FindFirstChild("HumanoidRootPart") then
+            if not GuiLibrary.ObjectsThatCanBeSaved.FlyOptionsButton.Api.Enabled 
+                and not GuiLibrary.ObjectsThatCanBeSaved.InfiniteFlyOptionsButton.Api.Enabled 
+                and Player.Character and Player.Character:FindFirstChild("HumanoidRootPart") then
+                
                 for _, enemy in pairs(game:GetService("Players"):GetPlayers()) do
                     if enemy.Team ~= Player.Team and playerIsAlive(enemy) then
-                        local distance = (enemy.Character.HumanoidRootPart.Position - Player.Character.HumanoidRootPart.Position).magnitude
-                        if distance < AntiHitRange.Value then
-                            teleportOut()
-                            break
+                        local enemyRoot = enemy.Character:FindFirstChild("HumanoidRootPart")
+                        if enemyRoot then
+                            local distance = (enemyRoot.Position - Player.Character.HumanoidRootPart.Position).magnitude
+                            if distance < AntiHitRange.Value then
+                                teleportOut()
+                                break
+                            end
                         end
                     end
                 end
