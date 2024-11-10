@@ -56,8 +56,8 @@ local store = {
 		universalLagbacks = 0
 	},
 	whitelist = {
-		chatStrings1 = {helloimusinginhaler = "vape"},
-		chatStrings2 = {vape = "helloimusinginhaler"},
+		chatStrings1 = {StevenHe = "vape"},
+		chatStrings2 = {vape = "StevenHe"},
 		clientUsers = {},
 		oldChatFunctions = {}
 	},
