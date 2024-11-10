@@ -9812,6 +9812,51 @@ end)
 
 -- Test Modules --
 
+run(function()
+    local AntiHitEnabled = false
 
+    local function playerIsAlive(player)
+        local character = player and player.Character
+        local humanoid = character and character:FindFirstChild("Humanoid")
+        return character and humanoid and humanoid.Health > 0.1
+    end
+
+    local function teleportOut()
+        local originalPosition = Player.Character.HumanoidRootPart.CFrame
+        Player.Character.HumanoidRootPart.CFrame = originalPosition + Vector3.new(0, 100000, 0)
+        task.wait(0.3)
+        Player.Character.HumanoidRootPart.CFrame = originalPosition
+    end
+
+    local function antiHitLoop()
+        while AntiHitEnabled do
+            task.wait(0.1)
+
+            if GuiLibrary.ObjectsThatCanBeSaved.FlyOptionsButton.Api.Enabled or GuiLibrary.ObjectsThatCanBeSaved.InfiniteFlyOptionsButton.Api.Enabled then
+                continue
+            end
+
+            for _, enemy in pairs(game:GetService("Players"):GetPlayers()) do
+                if enemy.Team ~= Player.Team and playerIsAlive(enemy) and playerIsAlive(Player) then
+                    local distance = (enemy.Character.HumanoidRootPart.Position - Player.Character.HumanoidRootPart.Position).magnitude
+                    if distance < AntiHitRange.Value then
+                        teleportOut()
+                        break
+                    end
+                end
+            end
+        end
+    end
+
+    GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+        Name = "AntiHit",
+        Function = function(callback)
+            AntiHitEnabled = callback
+            if AntiHitEnabled then
+                spawn(antiHitLoop)
+            end
+        end
+    })
+end)
 
 -- Test Modules Over --
