@@ -9849,7 +9849,7 @@ run(function()
     end
 
     GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-        Name = "AntiHit",
+        Name = "GXAntiHit",
         Function = function(callback)
             AntiHitEnabled = callback
             if AntiHitEnabled then
