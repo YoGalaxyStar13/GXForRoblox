@@ -11,7 +11,6 @@ local uis = game:GetService("UserInputService")
 local localmouse = lplr:GetMouse()
 local requestfunc = syn and syn.request or http and http.request or http_request or fluxus and fluxus.request or getgenv().request or request
 local getasset = getsynasset or getcustomasset
-
 local RenderStepTable = {}
 local StepTable = {}
 
